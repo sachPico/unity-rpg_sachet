@@ -52,12 +52,12 @@ MonoBehaviour:
     baseAttack: 423
     baseDefense: 198
     baseSpirit: 15
-    baseSpeed: 12
+    baseSpeed: 15
   leftBattleItem: {fileID: 0}
   rightBattleItem: {fileID: 0}
   buffs: []
   debuffs: []
-  turnValue: 0
+  turnValue: 165
   OnInitiate:
     m_PersistentCalls:
       m_Calls: []

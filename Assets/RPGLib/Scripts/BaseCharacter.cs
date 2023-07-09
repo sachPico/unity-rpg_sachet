@@ -11,7 +11,7 @@ public class BaseCharacter : MonoBehaviour
 {
     public TextAsset characterJson;
 
-    public BaseCharacterStat stats;
+    [SerializeField] public BaseCharacterStat stats;
 
     public BaseBattleItem leftBattleItem;
     public BaseBattleItem rightBattleItem;
@@ -35,6 +35,13 @@ public class BaseCharacter : MonoBehaviour
         stats.baseDefense = deserialized.baseDefense;
         stats.baseSpirit = deserialized.baseSpirit;
         stats.baseSpeed = deserialized.baseSpeed;
+    }
+
+    public BaseCharacter(BaseCharacterStat sourceStat)
+    {
+        stats = sourceStat;
+
+        turnValue = 0;
     }
 
     public void Initiate()
@@ -61,6 +68,7 @@ public struct BaseCharacterStat
     public int baseSpeed;
 }
 
+
 [CustomEditor(typeof(BaseCharacter)), CanEditMultipleObjects]
 public class BaseCharacterEditor : Editor
 {
@@ -69,11 +77,15 @@ public class BaseCharacterEditor : Editor
     private void OnEnable()
     {
         dst = (BaseCharacter)target;
+
+        EditorUtility.SetDirty(dst);
     }
 
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
+
+        serializedObject.Update();
 
         if (GUILayout.Button("Debug Display JSON"))
         {
@@ -84,5 +96,7 @@ public class BaseCharacterEditor : Editor
         {
             dst.Load(dst.characterJson.text);
         }
+
+        serializedObject.ApplyModifiedProperties();
     }
 }

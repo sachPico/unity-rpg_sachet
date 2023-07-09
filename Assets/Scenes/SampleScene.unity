@@ -153,13 +153,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characters:
+  - {fileID: 8721891187734587979, guid: d1ba2f26f3f6ceb4aa3fe40626d93d82, type: 3}
+  - {fileID: 413783307208278491, guid: 10e0931af94b99d4da19b7be2b43699b, type: 3}
   - {fileID: 7128916070105820771, guid: d46925fc762f62547938f731e621fd10, type: 3}
   - {fileID: 3831980794816097519, guid: 804d5545cbd64e6469c6ee3b68982550, type: 3}
   - {fileID: 4700122966322023975, guid: acc4ff590e990ea44b32e7d8cc470c44, type: 3}
   - {fileID: 2763566883648495971, guid: 681d4d80fe178904796740f662d8a664, type: 3}
-  - {fileID: 413783307208278491, guid: 10e0931af94b99d4da19b7be2b43699b, type: 3}
-  - {fileID: 8721891187734587979, guid: d1ba2f26f3f6ceb4aa3fe40626d93d82, type: 3}
   maxTurnValue: 120
+  maxPredictedCharacterTurns: 8
+  predictedCharacterTurns:
+  - Urania
+  - Marksmith Curtis
+  - Trucker
+  - Deborah Harper
+  - Urania
+  - Trucker
+  - Marksmith Curtis
+  - Jonnah Mayhew
 --- !u!4 &460464312
 Transform:
   m_ObjectHideFlags: 0

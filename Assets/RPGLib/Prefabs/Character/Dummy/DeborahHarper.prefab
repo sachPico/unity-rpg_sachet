@@ -46,18 +46,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterJson: {fileID: 4900000, guid: 06f2f6d88b0ea2e4e91c1b5cfb8523ac, type: 3}
   stats:
-    name: Derek Dyson
+    name: Deborah Harper
     weapon: 0
     nation: 0
-    baseAttack: 169
-    baseDefense: 69
+    baseAttack: 267
+    baseDefense: 42
     baseSpirit: 20
-    baseSpeed: 12
+    baseSpeed: 20
   leftBattleItem: {fileID: 0}
   rightBattleItem: {fileID: 0}
   buffs: []
   debuffs: []
-  turnValue: 0
+  turnValue: 180
   OnInitiate:
     m_PersistentCalls:
       m_Calls: []

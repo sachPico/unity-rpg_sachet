@@ -57,7 +57,7 @@ MonoBehaviour:
   rightBattleItem: {fileID: 0}
   buffs: []
   debuffs: []
-  turnValue: 0
+  turnValue: 84
   OnInitiate:
     m_PersistentCalls:
       m_Calls: []
