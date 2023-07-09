@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,9 @@ public class BattleSession : MonoBehaviour
     public List<BaseCharacter> characters;
 
     public int maxTurnValue;
+    public int maxPredictedCharacterTurns;
+
+    public List<string> predictedCharacterTurns;
 
     public static void StartSession(List<BaseCharacter> characters)
     {
@@ -31,66 +35,6 @@ public class BattleSession : MonoBehaviour
             c.Initiate();
         }
 
-        Sort();
-    }
-
-    public static void NextOnce()
-    {
-        foreach (var c in Instance.characters)
-        {
-            c.turnValue += c.stats.baseSpeed;
-        }
-
-        Sort();
-
-        ShowCurrentTurn();
-
-        if (Instance.characters[0].turnValue >= Instance.maxTurnValue)
-        {
-            Instance.characters[0].turnValue %= Instance.maxTurnValue;
-        }
-    }
-
-    public static void Next()
-    {
-        bool val = true;
-
-        while (val)
-        {
-            foreach (var c in Instance.characters)
-            {
-                if (c.turnValue >= Instance.maxTurnValue)
-                {
-                    val = false;
-                    break;
-                }
-                c.turnValue += c.stats.baseSpeed;
-            }
-        }
-
-        Sort();
-
-        ShowCurrentTurn();
-
-        Instance.characters[0].turnValue %= Instance.maxTurnValue;
-    }
-
-    public static void ShowCurrentTurn()
-    {
-        string val = "";
-
-        val += $"Now is {Instance.characters[0].stats.name}'s turn\n";
-
-        foreach(var c in Instance.characters)
-        {
-            val += $"\n{c.stats.name}: {c.turnValue} || {c.stats.baseSpeed}";
-        }
-
-        Debug.Log(val);
-    }
-
-    static void Sort()
-    {
         Instance.characters.Sort((BaseCharacter a, BaseCharacter b) =>
         {
             if (a == null && b == null) return 0;
@@ -98,6 +42,78 @@ public class BattleSession : MonoBehaviour
             else if (b == null) return 1;
             else return b.turnValue.CompareTo(a.turnValue);
         });
+    }
+
+    public static void PredictTurns(Action OnBeforePrediction)
+    {
+        OnBeforePrediction?.Invoke();
+
+        Instance.predictedCharacterTurns = new List<string>();
+
+        List<BaseCharacter> tmpCharacter = new List<BaseCharacter>();
+
+        foreach(var c in Instance.characters)
+        {
+            tmpCharacter.Add(c);
+        }
+
+        for(int i=0; i<Instance.maxPredictedCharacterTurns; i++)
+        {
+            Instance.predictedCharacterTurns.Add(PredictNextTurn(ref tmpCharacter));
+        }
+    }
+
+    public static void Next()
+    {
+        Instance.characters[0].turnValue %= Instance.maxTurnValue;
+
+        do
+        {
+            foreach (var c in Instance.characters)
+            {
+                c.turnValue += c.stats.baseSpeed;
+            }
+            Instance.characters.Sort((BaseCharacter a, BaseCharacter b) =>
+            {
+                if (a == null && b == null) return 0;
+                else if (a == null) return -1;
+                else if (b == null) return 1;
+                else return b.turnValue.CompareTo(a.turnValue);
+            });
+
+        } while (Instance.characters[0].turnValue < Instance.maxTurnValue);
+    }
+
+    //TODO: Optimize
+    static string PredictNextTurn(ref List<BaseCharacter> characters)
+    {
+        string message = "";
+
+        characters[0].turnValue %= Instance.maxTurnValue;
+
+        do
+        {
+            foreach (var c in characters)
+            {
+                c.turnValue += c.stats.baseSpeed;
+            }
+            characters.Sort((BaseCharacter a, BaseCharacter b)=>
+            {
+                if (a == null && b == null) return 0;
+                else if (a == null) return -1;
+                else if (b == null) return 1;
+                else return b.turnValue.CompareTo(a.turnValue);
+            });
+
+        } while (characters[0].turnValue < Instance.maxTurnValue);
+
+        foreach (var b in characters)
+        {
+            message += $"{b.stats.name}'s turn value: {b.turnValue}\n";
+        }
+        Debug.Log(message);
+
+        return characters[0].stats.name;
     }
 }
 
@@ -115,19 +131,19 @@ public class BattleSessionEditor : Editor
     {
         base.OnInspectorGUI();
 
-        if(GUILayout.Button("Debug Start Session"))
+        if (GUILayout.Button("Debug Start Session"))
         {
             BattleSession.StartSession(dst.characters);
+        }
+
+        if (GUILayout.Button("Debug Predict Future Turns"))
+        {
+            BattleSession.PredictTurns(()=>BattleSession.StartSession(dst.characters));
         }
 
         if (GUILayout.Button("Debug Next Turn"))
         {
             BattleSession.Next();
-        }
-
-        if (GUILayout.Button("Debug Next Turn Once"))
-        {
-            BattleSession.NextOnce();
         }
     }
 }
