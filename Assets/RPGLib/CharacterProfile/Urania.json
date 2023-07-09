@@ -1,0 +1,9 @@
+{
+    "name": "Urania",
+    "weapon": 0,
+    "nation": 0,
+    "baseAttack": 999,
+    "baseDefense": 99,
+    "baseSpirit": 99,
+    "baseSpeed": 99
+}
